@@ -1,11 +1,16 @@
+<!DOCTYPE html>
+<!-- ive started to clean the code and given notes that start with g to mean its gus(ie my changes) github problay has a fueature for that but i dont use it much. i may do more work latter but just use this as a framwork for cleaning your code and seprate the files especially the stylesheet -->
 <html>
 <head>
   <meta charset="utf-8" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
+  <!-- g: had to disable for Node to be enalbeled, find a workaround before depolying <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
+--> <script>var dato = 'stuff'</script>
   <style>
+
+  /* g: alot of sizeing issus here use %'s look into the contain attbute */
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
@@ -70,6 +75,7 @@ a
 </head>
 
 <body>
+
   <a href='javascript:showSettings();' style='position:absolute; top:5px; right: 5px;'>[S]</a>
   <div style='position:absolute; top:0; left:0; width:100%; height:100%; display:none; z-index:1; background:rgba(0,0,0,0.8); text-align:center; padding-top:30px;' id='settings'></div>
   <div id='main' style='text-align:center; padding-top:1.5em;'></div>
@@ -77,6 +83,9 @@ a
 </body>
 
 <script>
+// g: most of this should incorarated into a class and define class's and functions after of them in oder
+// g: constnts, varibales, class's, functions then run in that order
+
 var temp_scores={};
 var tests = [
   //{name:"N-Back", description:"Tap 'Match' if the current symbol is the same as N symbols ago, otherwise tap 'No Match'", func:nback_test},
@@ -85,333 +94,51 @@ var tests = [
   ];
 
 
+// g: moslty for the scores data. but move more to the backend in gernal
+class backend {
+  constructor(data) {
+    this.the_results = data;
+  }
+
+  show_data() {
+    //g: just for debuging RN
+
+    return this.the_results;
+  }
+
+  pass_to_DB() {
+    //g: pass data to backend here
+  }
+
+}
+
+testing_Database = new backend({reaction_time:'422ms', memory: "9", userID: 'gus'});
+
+
+
+console.log(testing_Database.show_data());
+
+
+
+  // g: its good practus to instanceate functions before they are callled
+  function getSettings()
+  {
+    // g: i take it this is a placeholder?
+    var settings=window.localStorage.settings;
+    if(!settings)
+      settings={schedule:'Schedule unset', modifier:'', startDate:'Unset'};
+    else
+      settings=JSON.parse(settings);
+
+    if(settings.schedule=='')
+      settings.schedule='Schedule unset';
+
+    return settings;
+  }
+
 showMain();
 var settings=getSettings();
-if(settings.schedule=='Schedule unset' || settings.startDate=='Unset')
-  showSettings();
 
-function showSettings()
-{
-  var settingsDiv=document.getElementById('settings');
-  settingsDiv.style.display='';
-  settingsDiv.innerHTML='';
-
-  var settings=getSettings();
-
-  var label=document.createElement('span');
-  settingsDiv.appendChild(label);
-  label.innerHTML='Schedule: ';
-  var select=document.createElement('select');
-  settingsDiv.appendChild(select);
-  select.addEventListener('change', setSettings.bind(undefined, settingsDiv));
-
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Mono';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='E1';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Segmented';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Siesta';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='E2';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='E3';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='E4';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='E5';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Trimaxion';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Bimaxion';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='DC1';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='DC2';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='DC3';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='DC4';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='TC1';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='TC2';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Triphasic';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='SEVAMAYL';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Dymaxion';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Naptation';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='SPAMAYL';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Tesla';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='Uberman';
-  option.innerHTML=option.value;
-  if(settings.schedule)
-  {
-    var options=select.getElementsByTagName('option');
-    for(var i=0; i<options.length; i++)
-    {
-      if(options[i].value==settings.schedule)
-      {
-        select.selectedIndex=i;
-        break;
-      }
-    }
-  }
-
-  var select=document.createElement('select');
-  settingsDiv.appendChild(select);
-  select.addEventListener('change', setSettings.bind(undefined, settingsDiv));
-
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='shortened';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='extended';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='flipped';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='modified';
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value='recovery';
-  option.innerHTML=option.value;
-  if(settings.modifier)
-  {
-    var options=select.getElementsByTagName('option');
-    for(var i=0; i<options.length; i++)
-    {
-      if(options[i].value==settings.modifier)
-      {
-        select.selectedIndex=i;
-        break;
-      }
-    }
-  }
-
-  /*var input=document.createElement('input');
-  settingsDiv.appendChild(input);
-  input.placeholder='Schedule';
-  if(settings.schedule!='Schedule unset')
-    input.value=settings.schedule;
-  input.addEventListener('change', setSettings.bind(undefined, settingsDiv));
-  input.addEventListener('keyUp', setSettings.bind(undefined, settingsDiv));
-  */
-  settingsDiv.appendChild(document.createElement('br'));
-
-  var label=document.createElement('span');
-  settingsDiv.appendChild(label);
-  label.innerHTML='Start date: ';
-  var input=document.createElement('input');
-  settingsDiv.appendChild(input);
-  input.type='date';
-  if(settings.startDate!='Unset')
-    input.value=settings.startDate;
-  input.addEventListener('change', setSettings.bind(undefined, settingsDiv));
-  input.addEventListener('keyUp', setSettings.bind(undefined, settingsDiv));
-  settingsDiv.appendChild(document.createElement('br'));
-
-  var label=document.createElement('span');
-  settingsDiv.appendChild(label);
-  label.innerHTML='Monophasic hours sleep required: ';
-  var input=document.createElement('input');
-  input.type='number';
-  input.max="24";
-  input.min="0";
-  input.style.width='5em';
-  settingsDiv.appendChild(input);
-  if(settings.monosleep)
-    input.value=settings.monosleep;
-  input.addEventListener('change', setSettings.bind(undefined, settingsDiv));
-  input.addEventListener('keyUp', setSettings.bind(undefined, settingsDiv));
-  settingsDiv.appendChild(document.createElement('br'));
-
-  var label=document.createElement('span');
-  settingsDiv.appendChild(label);
-  label.innerHTML='Adapted';
-  var a=document.createElement('a');
-  label.appendChild(a);
-  a.innerHTML='[?]';
-  a.href='javascript:void(0);';
-  a.addEventListener('click', showAdaptCriteria);
-  label.appendChild(document.createTextNode(': '));
-  var input=document.createElement('input');
-  input.type='checkbox';
-  settingsDiv.appendChild(input);
-  if(settings.adapted)
-  {
-    input.checked=true;
-  }
-  input.addEventListener('change', setSettings.bind(undefined, settingsDiv));
-  settingsDiv.appendChild(document.createElement('br'));
-
-  var label=document.createElement('span');
-  settingsDiv.appendChild(label);
-  label.innerHTML='Reminder to do tests: ';
-  var select=document.createElement('select');
-  select.addEventListener('change', setSettingsAndReload.bind(undefined, settingsDiv));
-  settingsDiv.appendChild(select);
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value="Never";
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value="Weekly";
-  option.innerHTML=option.value;
-  var option=document.createElement('option');
-  select.appendChild(option);
-  option.value="Daily";
-  option.innerHTML=option.value;
-  if(settings.reminder)
-  {
-    var options=select.getElementsByTagName('option');
-    for(var i=0; i<options.length; i++)
-    {
-      if(options[i].value==settings.reminder)
-      {
-        select.selectedIndex=i;
-        break;
-      }
-    }
-  }
-
-  var span=document.createElement('span');
-  settingsDiv.appendChild(span);
-  var select=document.createElement('select');
-  select.addEventListener('change', setSettingsAndReload.bind(undefined, settingsDiv));
-  span.appendChild(document.createTextNode(' on '));
-  span.appendChild(select);
-  var days=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  for(var i=0; i<days.length; i++)
-  {
-    var option=document.createElement('option');
-    select.appendChild(option);
-    option.value=days[i];
-    option.innerHTML=option.value;
-  }
-  if(settings.reminderDay)
-  {
-    var options=select.getElementsByTagName('option');
-    for(var i=0; i<options.length; i++)
-    {
-      if(options[i].value==settings.reminderDay)
-      {
-        select.selectedIndex=i;
-        break;
-      }
-    }
-  }
-
-  if(settings.reminder!="Weekly")
-  {
-    span.style.display='none';
-  }
-
-  var span=document.createElement('span');
-  settingsDiv.appendChild(span);
-  var input=document.createElement('input');
-  input.addEventListener('change', setSettings.bind(undefined, settingsDiv));
-  input.addEventListener('keyUp', setSettings.bind(undefined, settingsDiv));
-  span.appendChild(document.createTextNode(' at '));
-  span.appendChild(input);
-  input.type='time';
-  input.value='12:00';
-  if(settings.reminderTime)
-  {
-    input.value=settings.reminderTime;
-  }
-
-  if(settings.reminder!="Weekly" && settings.reminder!="Daily")
-  {
-    span.style.display='none';
-  }
-
-  settingsDiv.appendChild(document.createElement('br'));
-
-  var a=document.createElement('a');
-  settingsDiv.appendChild(a);
-  a.innerHTML='Test reminder (in 10 seconds)';
-  a.href='javascript:void(0);';
-  a.addEventListener('click', testNotify);
-  settingsDiv.appendChild(document.createElement('br'));
-
-  var a=document.createElement('a');
-  settingsDiv.appendChild(a);
-  a.innerHTML='Clear all test scores';
-  a.href='javascript:void(0);';
-  a.addEventListener('click', clearTest.bind(undefined, a));
-  settingsDiv.appendChild(document.createElement('br'));
-
-  var a=document.createElement('a');
-  settingsDiv.appendChild(a);
-  a.innerHTML='Close';
-  a.style.fontSize='2em';
-  a.href='javascript:void(0);';
-  a.addEventListener('click', hide.bind(undefined, settingsDiv));
-}
 
 function clearTest(a)
 {
@@ -469,19 +196,7 @@ function close(elem)
   elem.parentNode.removeChild(elem);
 }
 
-function getSettings()
-{
-  var settings=window.localStorage.settings;
-  if(!settings)
-    settings={schedule:'Schedule unset', modifier:'', startDate:'Unset'};
-  else
-    settings=JSON.parse(settings);
 
-  if(settings.schedule=='')
-    settings.schedule='Schedule unset';
-
-  return settings;
-}
 
 function getDayMillDiff(day)
 {
